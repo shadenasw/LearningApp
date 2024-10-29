@@ -6,10 +6,10 @@
 //
 import SwiftUI
 
-struct LogdayPage: View {
-    @StateObject private var vm = LearningViewModel()
+struct CurrentDay: View {
+    @StateObject private var vm = ViewModel()
     
-    let daysOfWeek = LearningViewModel.capitalizedFirstThreeLettersOfWeekdays
+    let daysOfWeek = ViewModel.capitalizedFirstThreeLettersOfWeekdays
     let columns = Array(repeating: GridItem(.flexible()), count: 7)
 
     var body: some View {
@@ -31,9 +31,9 @@ struct LogdayPage: View {
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
-                NavigationLink(destination: UpdatePage(viewModel: vm).navigationBarBackButtonHidden(true)) {
+                NavigationLink(destination: UpdateLearningGoal(vm: vm).navigationBarBackButtonHidden(true)) {
                     Circle()
-                        .fill(Color.darkGray)
+                        .fill(Color.darkGray.opacity(0.6))
                         .frame(width: 50, height: 50)
                         .overlay(
                             Text("🔥")
@@ -102,7 +102,7 @@ struct LogdayPage: View {
                                             .bold()
                                             .background(
                                                 Circle()
-                                                    .fill(isLearned ? Color.green.opacity(0.2) : isFrozen ? Color.blue.opacity(0.2) : Color.clear)
+                                                    .fill(isLearned ? Color.learned: isFrozen ? Color.blue.opacity(0.2) : Color.clear)
                                                     .frame(width: 35, height: 35)
                                             )
                                     }
@@ -121,8 +121,8 @@ struct LogdayPage: View {
                                     .font(.title)
                                     .foregroundColor(.white)
                                 Text("Day streak")
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray.opacity(0.4))
                             }
                             Divider()
                                 .background(Color.gray)
@@ -132,50 +132,48 @@ struct LogdayPage: View {
                                 Text("\(vm.freezeCount)🧊")
                                     .font(.title)
                                     .foregroundColor(.white)
-                                Text("Day frozen")
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
+                                Text("Day freezed")
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray.opacity(0.4))
                             }
                         }
                     }
                 }
             }
             .onAppear(perform: vm.updateCalendarDays)
-            .padding(.top, 0)
 
             // Log Today Button
             Button(action: vm.toggleLogDay) {
                 Circle()
-                    .fill(vm.dayFrozen ? Color.blue : (vm.dayLogged ? Color.brown : Color.orangeL))
-                    .frame(width: 250, height: 250)
+                    .fill(vm.dayFrozen ? Color.darkBlue : (vm.dayLogged ? Color.learned : Color.orangeL))
+                    .frame(width: 300, height: 300)
                     .overlay(
                         Text(vm.dayFrozen ? "Day Frozen" : (vm.dayLogged ? "Learned Today" : "Log today as Learned"))
-                            .foregroundColor(.black)
+                            .foregroundColor(vm.dayFrozen ? .blue : (vm.dayLogged ? .orange : .black)) // Change font color based on status
                             .font(.largeTitle)
                             .bold()
                     )
             }
-            .padding(.top, 20)
             .disabled(vm.dayFrozen)
 
             // Freeze Day Button
             Button(action: vm.toggleFreezeDay) {
                 RoundedRectangle(cornerRadius: 10)
-                    .fill(vm.dayFrozen ? Color.gray : Color.blue)
+                    .fill((vm.dayLogged || vm.dayFrozen) ? Color.darkGray : Color.babyBlue) // Gray background if day is logged or frozen
                     .frame(width: 150, height: 50)
                     .overlay(
                         Text("Freeze day")
-                            .foregroundColor(.white)
+                            .foregroundColor((vm.dayLogged || vm.dayFrozen) ? .freezeFont : .blue) // Gray text if day is logged or frozen
                             .font(.headline)
                     )
             }
-            .disabled(vm.dayLogged)
-            .padding(.top, 10)
+            .disabled(vm.dayLogged || vm.dayFrozen) // Disable button if day is logged or frozen
+    
 
             Text("\(vm.freezeCount) out of \(vm.maxFreezesPerMonth) freezes used")
-                .font(.caption)
-                .foregroundColor(.gray)
-                .padding(.top, 10)
+                .font(.footnote)
+                .foregroundColor(.gray.opacity(0.6))
+       
 
             Spacer()
         }
@@ -185,6 +183,6 @@ struct LogdayPage: View {
 
 struct LogdayPage_Previews: PreviewProvider {
     static var previews: some View {
-        LogdayPage()
+        CurrentDay()
     }
 }

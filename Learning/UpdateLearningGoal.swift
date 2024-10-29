@@ -6,8 +6,8 @@
 //
 import SwiftUI
 
-struct UpdatePage: View {
-    @ObservedObject var viewModel: LearningViewModel  // Use the shared ViewModel
+struct UpdateLearningGoal: View {
+    @ObservedObject var vm: ViewModel  // Use the shared ViewModel
 
     // Dismiss action
     @Environment(\.dismiss) private var dismiss
@@ -28,7 +28,7 @@ struct UpdatePage: View {
                             Text("Back")
                                 .font(.title3)
                         }
-                        .foregroundColor(.orange)
+                        .foregroundColor(.orangeL)
                     }
                     
                     Spacer()
@@ -49,8 +49,7 @@ struct UpdatePage: View {
                     }
                 }
                 .padding(.horizontal)
-                .padding(.top, 10)
-            
+                
                 // Goal Input Section
                 VStack(alignment: .leading, spacing: 10) {
                     Text("I want to learn")
@@ -58,16 +57,13 @@ struct UpdatePage: View {
                         .foregroundColor(.white)
                     
                     // Bind TextField to `learningGoal` in the ViewModel
-                    TextField("Enter goal", text: $viewModel.learningGoal)
-                        .font(.title3)
-                        .foregroundColor(.white)
-                        .padding(8)
-                        .background(
-                            RoundedRectangle(cornerRadius: 8)
-                                .fill(Color.gray.opacity(0.3))
-                        )
+                    TextField("Swift", text: $vm.userInput)
+                        .padding()
+                        .background(Color.black)
+                        .cornerRadius(8)
+                        .foregroundColor(.darkGray)
+                        .overlay(Divider().background(Color.gray), alignment: .bottom)
                 }
-                .padding(.horizontal, 10)
                 .padding(.top, 10)
                 
                 // Duration Selection Section
@@ -80,22 +76,22 @@ struct UpdatePage: View {
                     HStack(spacing: 10) {
                         ForEach(["Week", "Month", "Year"], id: \.self) { period in
                             Button(action: {
-                                viewModel.setDuration(forUpdatePage: period)  // Update duration in ViewModel
+                                vm.duration = period  // Directly update `duration` in ViewModel
                             }) {
                                 Text(period)
-                                    .frame(width: 60, height: 30)
-                                    .background(viewModel.duration == period ? Color.orange : Color.gray.opacity(0.3))
-                                    .foregroundColor(viewModel.duration == period ? .black : .orange)
+                                    .frame(width: 70, height: 35)
+                                    .background(vm.duration == period ? Color.orange : Color.gray.opacity(0.3))
+                                    .foregroundColor(vm.duration == period ? .black : .orange)
                                     .cornerRadius(8)
                             }
                         }
-                    }.frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .padding(.horizontal, 20)
                 
                 Spacer()
             }
-            .padding(.vertical, 20)
+            .padding()
         }
     }
 }
@@ -104,7 +100,7 @@ struct UpdatePage: View {
 struct UpdatePage_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            UpdatePage(viewModel: LearningViewModel())
+            UpdateLearningGoal(vm: ViewModel())
         }
     }
 }

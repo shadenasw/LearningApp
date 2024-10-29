@@ -9,12 +9,12 @@ import SwiftUI
 import Foundation
 import Combine
 
-class LearningViewModel: ObservableObject {
-    // MARK: - Properties for GreetPage
+class ViewModel: ObservableObject {
+    // Properties i will need in Onboarding
     @Published var userInput: String = "Swift"
     @Published var duration: String = "Month"
 
-    // MARK: - Properties for LogdayPage
+    // Properties for CurrentDay
     @Published var streakCount = 0
     @Published var freezeCount = 0
     @Published var maxFreezesPerMonth = 6
@@ -24,7 +24,7 @@ class LearningViewModel: ObservableObject {
     @Published var dateStatuses: [Date: String] = [:]
     @Published var days: [Date] = []
 
-    // MARK: - Properties for UpdatePage
+    // Properties for UpdateLearningGoal
     @Published var learningGoal: String = "Swift"
     @Published var selectedDuration: String = "Month" // For Week, Month, Year selection
 
@@ -36,12 +36,12 @@ class LearningViewModel: ObservableObject {
         updateCalendarDays()
     }
 
-    // MARK: - Methods for GreetPage
+    //  Methods for Onborading
     func setDuration(forGreetPage duration: String) {
         self.duration = duration
     }
 
-    // MARK: - Methods for LogdayPage
+    // Methods for CurrentDay
 
     func updateCalendarDays() {
         days = calendarDisplayDays
@@ -71,7 +71,7 @@ class LearningViewModel: ObservableObject {
         }
     }
 
-    // MARK: - Methods for UpdatePage
+    // UpdateLearningGoal functions
 
     func setLearningGoal(_ goal: String) {
         self.learningGoal = goal
@@ -81,7 +81,7 @@ class LearningViewModel: ObservableObject {
         self.selectedDuration = duration
     }
 
-    // MARK: - Helper functions for date formatting
+    //Functions helps formatting the date
     func formattedDate(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMMM yyyy"
@@ -94,7 +94,7 @@ class LearningViewModel: ObservableObject {
         return formatter.string(from: date)
     }
 
-    // MARK: - Date Utility Properties
+    //  Date  Properties
 
     var startOfMonth: Date {
         Calendar.current.dateInterval(of: .month, for: date)?.start ?? Date()

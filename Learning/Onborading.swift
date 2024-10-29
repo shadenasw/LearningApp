@@ -6,14 +6,14 @@
 //
 import SwiftUI
 
-struct GreetPage: View {
-    @StateObject private var vm = LearningViewModel()
+struct Onborading: View {
+    @StateObject private var vm = ViewModel()
     
     var body: some View {
         NavigationStack {
             VStack(spacing: 25) {
                 Circle()
-                    .fill(Color.circle1)
+                    .fill(Color.darkGray.opacity(0.6))
                     .frame(width: 120, height: 120)
                     .overlay(
                         Text("🔥")
@@ -66,8 +66,8 @@ struct GreetPage: View {
              
                 
              
-                NavigationLink(destination: LogdayPage().navigationBarBackButtonHidden(true)) {
-                    Text("Start")
+                NavigationLink(destination: CurrentDay().navigationBarBackButtonHidden(true)) {
+                    Text("Start ")
                         .fontWeight(.bold)
                         .frame(maxWidth: 150, minHeight: 55)
                         .background(Color.orange)
@@ -87,6 +87,6 @@ struct GreetPage: View {
 
 struct GreetPage_Previews: PreviewProvider {
     static var previews: some View {
-        GreetPage()
+        Onborading()
     }
 }
